@@ -1,22 +1,73 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Universe Dragon Core</title>
+<meta charset="utf-8">
+<title>UD 3D Core</title>
+<style>
+body { margin:0; overflow:hidden; background:black; }
+#hud {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  color: cyan;
+  font-family: monospace;
+}
+button {
+  background: black;
+  border: 1px solid cyan;
+  color: cyan;
+  padding: 10px;
+  margin-top: 10px;
+}
+</style>
 </head>
 <body>
-  <h1>UD Core — Nova / Dragon 🔥</h1>
-  <p>Frontend ready.</p>
+
+<div id="hud">
+  <h2>UNIVERSE DRAGON CORE</h2>
+  <button onclick="nova()">NOVA MODE</button>
+  <button onclick="dragon()">DRAGON MODE</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+
+<script>
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer();
+renderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(renderer.domElement);
+
+// Grid (TRON floor)
+const grid = new THREE.GridHelper(100, 100, 0x00ffff, 0x003333);
+scene.add(grid);
+
+// Glowing cube core
+const geometry = new THREE.BoxGeometry();
+const material = new THREE.MeshBasicMaterial({ color: 0x00ffff, wireframe:true });
+const cube = new THREE.Mesh(geometry, material);
+scene.add(cube);
+
+camera.position.z = 5;
+
+function animate() {
+  requestAnimationFrame(animate);
+  cube.rotation.x += 0.01;
+  cube.rotation.y += 0.01;
+  renderer.render(scene, camera);
+}
+animate();
+
+function nova(){
+  cube.material.color.set(0x00ffff);
+  alert("NOVA Activated 🧠");
+}
+
+function dragon(){
+  cube.material.color.set(0xff5500);
+  alert("DRAGON Activated 🔥");
+}
+</script>
+
 </body>
-</html> 
-
-from fastapi import FastAPI
-
-app = FastAPI(title="Universe Dragon Core")
-
-@app.get("/")
-def home():
-    return {"ok": True, "msg": "UD Core running 🔥"}
-
-
+</html>
