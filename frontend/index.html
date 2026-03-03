@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Universe Dragon Core</title>
+</head>
+<body>
+  <h1>UD Core — Nova / Dragon 🔥</h1>
+  <p>Frontend ready.</p>
+</body>
+</html> 
+
+from fastapi import FastAPI
+
+app = FastAPI(title="Universe Dragon Core")
+
+@app.get("/")
+def home():
+    return {"ok": True, "msg": "UD Core running 🔥"}
+
+
