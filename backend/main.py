@@ -19,6 +19,28 @@ app.add_middleware(
 
 client = OpenAI(api_key=_api_key)
 
+# ===== Data =====
+PROJECTS = [
+    {
+        "id": "nova-core",
+        "name": "NOVA Core",
+        "description": "Analytical command module specialized in strategic insights.",
+        "status": "online",
+    },
+    {
+        "id": "dragon-core",
+        "name": "DRAGON Core",
+        "description": "Action-focused module optimized for decisive tasking.",
+        "status": "online",
+    },
+    {
+        "id": "starlance",
+        "name": "Starlance",
+        "description": "Experimental exploration suite for frontier initiatives.",
+        "status": "standby",
+    },
+]
+
 # ===== Request Model =====
 class ChatRequest(BaseModel):
     mode: str
@@ -31,6 +53,11 @@ def home():
         "status": "online",
         "system": "Universe Dragon Core 🔥"
     }
+
+# ===== Projects Listing =====
+@app.get("/api/projects")
+def list_projects():
+    return {"projects": PROJECTS}
 
 # ===== Chat Endpoint =====
 @app.post("/api/chat")
