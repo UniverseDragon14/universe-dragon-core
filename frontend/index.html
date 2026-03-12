@@ -97,8 +97,8 @@ button:hover { background: #001a1a; }
   <div id="projects-panel">
     <div style="color:#66cccc;font-weight:bold;">Projects</div>
     <button id="projects-btn" onclick="loadProjects()">LIST PROJECTS</button>
-    <div id="projects-status" style="color:#557777;font-size:11px;min-height:14px;"></div>
-    <div id="projects-list" aria-live="polite"></div>
+    <div id="projects-status" style="color:#557777;font-size:11px;min-height:14px;" role="status" aria-live="polite"></div>
+    <div id="projects-list" role="region" aria-label="Projects list"></div>
   </div>
   <div id="chat-panel">
     <div id="messages"></div>
@@ -197,6 +197,7 @@ async function loadProjects() {
   const status = document.getElementById('projects-status');
   const list = document.getElementById('projects-list');
   const btn = document.getElementById('projects-btn');
+  const formatErrorMessage = "Unable to display projects due to an unexpected response format.";
 
   status.textContent = 'Loading...';
   btn.disabled = true;
@@ -205,25 +206,38 @@ async function loadProjects() {
   try {
     const res = await fetch('/api/projects');
     if (!res.ok) {
-      const err = await res.json();
-      throw new Error(err.detail || 'Request failed');
+      const text = await res.text();
+      let detail = `Request failed with status ${res.status}`;
+      try {
+        const err = JSON.parse(text);
+        detail = err.detail || detail;
+      } catch {
+        if (text) detail = `${detail}: ${text}`;
+      }
+      throw new Error(detail);
     }
     const data = await res.json();
-    if (!data.projects || !data.projects.length) {
+    if (!Array.isArray(data.projects)) {
+      status.textContent = '';
+      list.innerHTML = `<div style="color:#ff6666;">${escapeHtml(formatErrorMessage)}</div>`;
+      return;
+    }
+    if (data.projects.length === 0) {
       list.innerHTML = '<div style="color:#888;">No projects found.</div>';
       return;
     }
     list.innerHTML = data.projects.map(p => `
       <div class="project-card">
-        <div class="project-name">${escapeHtml(p.name)}</div>
+        <div class="project-name">${escapeHtml(p.name || 'Unnamed Project')}</div>
         <div class="project-desc">${escapeHtml(p.description || '')}</div>
         <div class="project-status">Status: ${escapeHtml(p.status || 'unknown')}</div>
       </div>
     `).join('');
+    status.textContent = 'Loaded projects.';
   } catch (e) {
     list.innerHTML = `<div style="color:#ff6666;">ERROR: ${escapeHtml(e.message)}</div>`;
+    status.textContent = 'Failed to load projects.';
   } finally {
-    status.textContent = '';
     btn.disabled = false;
   }
 }
