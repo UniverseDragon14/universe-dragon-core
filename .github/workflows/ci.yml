@@ -32,4 +32,4 @@ jobs:
         run: python -m compileall -q backend
 
       - name: Run tests
-        run: pytest -q backend/tests
+        run: python -m pytest -q backend/tests
