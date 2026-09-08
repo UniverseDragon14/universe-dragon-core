@@ -78,7 +78,7 @@ def evaluate_action(
     )
 
 
-def core_reply(mode: str, message: str) -> dict[str, str]:
+def core_reply(mode: str, message: str) -> dict[str, Any]:
     """Return a truthful core-routing response.
 
     This repository does not pretend that a model provider or tool executor is
@@ -110,6 +110,6 @@ def core_reply(mode: str, message: str) -> dict[str, str]:
         "mode": normalized,
         "reply": reply,
         "request_preview": message[:120],
-        "executed": "false",
+        "executed": False,
         "provider": "core-only",
     }
