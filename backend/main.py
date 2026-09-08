@@ -102,7 +102,7 @@ def capabilities() -> dict[str, Any]:
 
 
 @app.post("/api/chat")
-def chat(req: ChatRequest) -> dict[str, str]:
+def chat(req: ChatRequest) -> dict[str, Any]:
     try:
         return core_reply(req.mode, req.message)
     except ValueError as exc:
