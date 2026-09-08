@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
-from core import RiskLevel, core_reply, evaluate_action
+from backend.core import RiskLevel, core_reply, evaluate_action
 
 
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"))
